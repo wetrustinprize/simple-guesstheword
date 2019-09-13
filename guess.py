@@ -1,5 +1,7 @@
+#importing libs
 import json
 import sys
+import numpy
 
 #initial setup
 
@@ -20,8 +22,6 @@ except:
     
     sys.exit('No json file with {} letters'.format(number_letters))
 
-#start
-
 ##check which letters will use to guess
 for a in using_alphabet:
     has = False
@@ -34,7 +34,7 @@ for a in using_alphabet:
     if not(has):
         using_alphabet.remove(a)
 
-##function to update the letters and words
+##functions to update the letters and words
 def dontHave( letter ):
     global words
     global using_alphabet
@@ -48,7 +48,42 @@ def dontHave( letter ):
     
     words = new_words
 
+def have( letter ):
+    global words
 
-dontHave('a')
-print(using_alphabet)
-print(words)
+    new_words = []
+
+    for w in words:
+        if letter in w:
+            new_words.append(w)
+
+    words = new_words
+
+#start
+
+choosen_letter = ""
+have_letters = []
+word = ""
+
+while(len(words) != 1):
+    for l in using_alphabet:
+        if numpy.array_equal(have_letters, using_alphabet) or len(using_alphabet) == 0:
+            sys.exit('I couldn\'t guess your word :(')
+
+        if l in have_letters:
+            continue
+
+        choice = ""
+        while(not(choice.isalpha()) or not((choice.lower().startswith('y') or choice.lower().startswith('n')))):
+            choice = input("Your word has {}?".format(l))
+
+        if(choice.lower().startswith('y')):
+            have(l)
+            have_letters.append(l)
+        else:
+            dontHave(l)
+            break
+
+word = words[0]
+
+print('Your word is {}!'.format(word))
