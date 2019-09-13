@@ -61,7 +61,6 @@ def have( letter ):
 
 #start
 
-choosen_letter = ""
 have_letters = []
 word = ""
 
